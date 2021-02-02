@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>JSX - składnia React do tworzenie struktury</title>
+	<!-- Plik ze stylami css -->
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<!-- Element HTML pełniący rolę kontenera dla aplikacji React -->
+	<div id="root"></div>
+	<!-- Biblioteka React -->
+	<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+	<!-- Biblioteka React DOM -->
+	<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+	<!-- Babel - Nie korzystamy na produkcji (tylko podczas developmentu) -->
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+	<!-- Nasz kod - kompilowanie JSX i ES6 do ES5 - zwróc uwagę na atrybut type (domyślnie: type='text/javascript -->
+	<script type="text/babel">
+		const data = {
+				users: [
+					{
+						id: 1,
+						age: 29,
+						name: "Arek",
+						sex: "male"
+					},
+					{
+						id: 2,
+						age: 26,
+						name: "Anjali",
+						sex: "genderqueer"
+					},
+					{
+						id: 3,
+						age: 49,
+						name: "Marta",
+						sex: "female"
+					},
+					{
+						id: 4,
+						age: 19,
+						name: "Stephanie",
+						sex: "female"
+					},
+					{
+						id: 5,
+						age: 29,
+						name: "Stephan",
+						sex: "male"
+					},
+					{
+						id: 6,
+						age: 37,
+						name: "Gopi",
+						sex: "genderqueer"
+					}
+				]
+			}
+
+
+
+			const Item = ({ user }) => (
+				<div>
+					<h2><strong>{user.name}</strong></h2>
+					<p>User info:</p>
+					<p>Age: <strong>{user.age}</strong></p>
+					<p>Sex: <strong>{user.sex}</strong></p>
+					<p>- - - - - - - - - - - - - - -</p>
+				</div>
+			)
+
+
+			class App extends React.Component {
+				state = {
+					show: "all"
+				}
+
+				usersList = () => {
+					let users = this.props.data.users;
+
+					if (this.state.show === "all") {
+						users = users.map(user => <Item key={user.id} user={user} />)
+					} else {
+						users = users.filter(user => user.sex === this.state.show)
+						users = users.map(user => <Item key={user.id} user={user} />)
+					}
+
+					return users
+				}
+
+				handleFilter = (filter) => {
+					this.setState({
+						show: filter
+					})
+				}
+
+				render() {
+
+
+					return (
+						<>
+							<button onClick={this.handleFilter.bind(this, "all")}>Show all</button>
+							<button onClick={this.handleFilter.bind(this, "male")}>Show male</button>
+							<button onClick={this.handleFilter.bind(this, "female")}>Show female</button>
+							<button onClick={this.handleFilter.bind(this, "genderqueer")}>Show genderqueer</button>
+							{this.usersList()}
+						</>
+					)
+				}
+			}
+
+
+
+
+
+
+			ReactDOM.render(<App data={data} />, document.getElementById('root'))
+	</script>
+</body>
+
+</html>
